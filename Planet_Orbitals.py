@@ -7,31 +7,11 @@ from matplotlib import animation
 fig = plt.figure()
 ax = fig.gca(projection='3d')
 ##ax.set_aspect("equal")
-limit = 4750000
 
+limit = 4750000
 ax.set_xlim(-limit, limit)
 ax.set_ylim(-limit, limit)
 ax.set_zlim(-1, 1)
-
-#draw sphere
-##u, v = np.mgrid[0:2*np.pi:30j, 0:np.pi:15j]
-##x = np.cos(u)*np.sin(v)
-##y = np.sin(u)*np.sin(v)
-##z = np.cos(v)
-##ax.plot_wireframe(x, y, z, color="r")
-
-##r = 1
-##pi = np.pi
-##cos = np.cos
-##sin = np.sin
-##phi, theta = np.mgrid[0.0:pi:100j, 0.0:2.0*pi:100j]
-##x = r*sin(phi)*cos(theta)
-##y = r*sin(phi)*sin(theta)
-##z = r*cos(phi)
-##
-##ax.plot_surface(
-##    x, y, z,  rstride=1, cstride=1, color='c', alpha=0.6, linewidth=0)
-
 
 #draw a point
 #ax.scatter([0], [0], [0], color="y", s=50)
@@ -60,16 +40,6 @@ ax.scatter([778600], [0], [0], color="r", s=95.44643082)
     return circ,
 
 #anim = animation.FuncAnimation(fig,animate,init_func=init,frames=360,interval=20,blit=True)
-
-fig = plt.figure(figsize = (10, 10))
-ax = fig.add_subplot(111, projection='3d')
-u = np.linespace(0, 2 * np.pi, 100)
-v = np.linespace(0, np.pi, 100)
-
-x = 10 * np.outer(np.cos(u), np.sin(v))
-y = 10 * np.outer(np.sin(u), np.sin(v))
-z = 10 * np.outer(np.ones(np.size(u), np.cos(v))
-ax.plot_surface(x, y, z, rstride=4, cstride=4, color='b')
 
 fig.set_facecolor('black')
 ax.set_facecolor('black') 
