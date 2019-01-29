@@ -5,43 +5,84 @@ from matplotlib import animation
 from matplotlib import cm, colors
 from mpl_toolkits.mplot3d import Axes3D
 
-#fig = plt.figure()
+
 #Setting the size of the window for the plot
 fig = plt.figure(figsize=(8,5.5))
 ax = fig.add_subplot(111, projection='3d')
 # Set the aspect ratio to 1 so our spheres look spherical
 ax.set_aspect('equal')
 
-phi = np.linspace(0, np.pi, 100)
-theta = np.linspace(0, 2*np.pi, 100)
-phi, theta = np.meshgrid(phi, theta)
-
-# The Cartesian coordinates of the unit sphere
-def draw_sphere(r, x, y, z, c):
-    x = (r* np.sin(phi) * np.cos(theta)) + x
-    y = (r*np.sin(phi) * np.sin(theta)) + y
-    z = (r*np.cos(phi)) + z
-    #ax.plot_surface(x, y, z,  rstride=1, cstride=1, color=c)
-    ax.plot_surface(x, y, z,  rstride=4, cstride=4, color=c)   #(having higher strides allow the program to run faster)
-
 limit = 4550000000
 ax.set_xlim(-limit, limit)
 ax.set_ylim(-limit, limit)
 ax.set_zlim(-limit, limit)
 
-#https://matplotlib.org/gallery/color/named_colors.html             (color lists link)
 
+
+# The Cartesian coordinates of the unit sphere
+phi = np.linspace(0, np.pi, 100)
+theta = np.linspace(0, 2*np.pi, 100)
+phi, theta = np.meshgrid(phi, theta)
+
+def draw_sphere(r, x, y, z, c):
+    x = (r* np.sin(phi) * np.cos(theta)) + x
+    y = (r*np.sin(phi) * np.sin(theta)) + y
+    z = (r*np.cos(phi)) + z
+    #ax.plot_surface(x, y, z,  rstride=1, cstride=1, color=c)
+    ax.plot_surface(x, y, z,  rstride=4, cstride=4, color=c)                #(having higher strides allow the program to run faster)
+
+    
+
+#https://stackoverflow.com/questions/42264232/draw-ellipse-in-matplotlib-given-the-focii (Info for ellipses)
+
+def elliptical_orbit(semimajor_axis, semiminor_axis, eccentricity)
+    # Compute ellipse parameters
+    a1 = 0                                      # Foci one x-coordinate
+    b1 = 0                                      # Foci one y-coordinate
+    semimajor_axis = maj_ax                     # Semimajor axis                 
+    semimajor_axis = min_ax                     # Semiminor axis
+    eccentricity = e
+
+    f = np.sqrt((a1 - x0)**2 + (b1 - y0)**2)    # Distance from center to focus
+    x0 = maj_ax * e                             # Center x-value
+    b2 = 0                                      # Foci two y-coordinate
+    a2 = (2 * x0) - b2                          # Foci two x-coordinate
+    y0 = (b1 + b2) / 2                          # Center y-value
+    phi_ell = np.arctan2((b2 - b1), (a2 - a1))  # Angle between major axis and x-axis
+
+    # Parametric plot in t
+    resolution = 1000
+    t = np.linspace(0, 2*np.pi, resolution)
+    x = x0 + a * np.cos(t) * np.cos(phi_ell) - b * np.sin(t) * np.sin(phi_ell)
+    y = y0 + a * np.cos(t) * np.sin(phi_ell) + b * np.sin(t) * np.cos(phi_ell)
+
+    # Plot ellipse
+    plt.plot(x, y)
+
+    plt.axis('equal')
+    plt.show()
+
+
+
+#A way to plot a planet on a given line
+N = 4
+for i in range(N):
+    #(np.cos(2*np.pi*i/N), np.sin(2*np.pi*i/N), 0))                         # on the unit circle
+    draw_sphere(69911000, (np.cos(2*np.pi*i/N)+778600000), (np.sin(2*np.pi*i/N)+778600000), 0, 'orange')       # on a unit circle
+
+    
+
+#https://matplotlib.org/gallery/color/named_colors.html (color lists link)    
 #draw planet as spheres at specific points
-sun = draw_sphere(695956*50, 0, 0, 0, 'yellow')                     #figure out how to scale this when you zoom in to graph.
-mercury = draw_sphere(2440000, 57900000, 0, 0, 'lightgrey')
-venus = draw_sphere(6052000, 108200000, 0, 0, 'oldlace')
-earth = draw_sphere(6371000, 149600000, 0, 0, 'dodgerblue')
-mars = draw_sphere(3390000, 227900000, 0, 0, 'indianred')
-jupiter = draw_sphere(69911000, 778600000, 0, 0, 'orange')
-saturn = draw_sphere(58232000, 1433500000, 0, 0, 'navajowhite')
-uranus = draw_sphere(25362000, 2872500000, 0, 0, 'lightblue')
-neptune = draw_sphere(24622000, 4495100000, 0, 0, 'blue')
-
+sun = draw_sphere(695956*50, 0, 0, 0, 'yellow')                         #####figure out how to scale this when you zoom in to graph.
+##mercury = draw_sphere(2440000, 57900000, 0, 0, 'lightgrey')
+##venus = draw_sphere(6052000, 108200000, 0, 0, 'oldlace')
+##earth = draw_sphere(6371000, 149600000, 0, 0, 'dodgerblue')
+##mars = draw_sphere(3390000, 227900000, 0, 0, 'indianred')
+##jupiter = draw_sphere(69911000, 778600000, 0, 0, 'orange')
+##saturn = draw_sphere(58232000, 1433500000, 0, 0, 'navajowhite')
+##uranus = draw_sphere(25362000, 2872500000, 0, 0, 'lightblue')
+##neptune = draw_sphere(24622000, 4495100000, 0, 0, 'blue')
 
 
 ##def init():
@@ -56,8 +97,8 @@ neptune = draw_sphere(24622000, 4495100000, 0, 0, 'blue')
 ##    circ.center = (x, y)
 ##    return circ,
 
-##anim = animation.FuncAnimation(fig,animate,init_func=init,frames=360,interval=20,blit=True)
 
+##anim = animation.FuncAnimation(fig,animate,init_func=init,frames=360,interval=20,blit=True)
 
 
 # Turn off the axis planes
