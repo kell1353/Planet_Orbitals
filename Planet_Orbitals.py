@@ -1,10 +1,15 @@
 import numpy as np
 from itertools import product, combinations
+from visual import *
 import matplotlib.pyplot as plt
 from matplotlib import animation
 from matplotlib import cm, colors
 from mpl_toolkits.mplot3d import Axes3D
 
+####http://www.glowscript.org/docs/VPythonDocs/index.html
+####file:///C:/Users/austin.keller/Downloads/PHYS172_Lab1(1).pdf
+#####visual test#####
+##rod = cylinder(pos=(0,2,1), axis=(5,0,0), radius=1)
 
 #Setting the size of the window for the plot
 fig = plt.figure(figsize=(8,5.5))
@@ -54,7 +59,6 @@ def elliptical_orbit(semimajor_axis, semiminor_axis, eccentricity):
     plt.plot(x, y, linewidth=.75)
 
 
-
 """Calculate Orbits"""
 mercury_orbit = elliptical_orbit(57910000, 56670300, .2056)
 venus_orbit = elliptical_orbit(108210000, 107997400, .0067)
@@ -67,19 +71,13 @@ neptune_orbit = elliptical_orbit(4495060000, 4499727700, .0113)
 
 
 #A way to plot a planet on a given line
-N = 4
+N = 20
 tuples = []
 for i in range(N):
     theta1 = 2*np.pi*i/N
     x = np.cos(theta1)
     y = np.sin(theta1)
-    draw_sphere(69911000, (x*778600000), (y*778600000), 0, 'orange')       # on a unit circle
-    
-##draw_sphere(69911000, (np.cos(2*np.pi*0/4)+778600000), (np.sin(2*np.pi*0/4)+0), 0, 'orange')
-##draw_sphere(69911000, (np.cos(2*np.pi*1/4)+0), (np.sin(2*np.pi*1/4)+778600000), 0, 'orange')
-##draw_sphere(69911000, (np.cos(2*np.pi*2/4)-778600000), (np.sin(2*np.pi*2/4)+0), 0, 'orange')
-##draw_sphere(69911000, (np.cos(2*np.pi*3/4)+0), (np.sin(2*np.pi*3/4)-778600000), 0, 'orange')
-
+    draw_sphere(69911000, (x*778600000), (y*778600000), 0, 'orange')                              # on a unit circle
 
 
 #https://matplotlib.org/gallery/color/named_colors.html (color lists link)    
