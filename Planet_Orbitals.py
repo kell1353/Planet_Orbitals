@@ -1,6 +1,6 @@
 import numpy as np
 from itertools import product, combinations
-from visual import *
+#from visual import *
 import matplotlib.pyplot as plt
 from matplotlib import animation
 from matplotlib import cm, colors
@@ -11,7 +11,7 @@ from mpl_toolkits.mplot3d import Axes3D
 #####visual test#####
 ##rod = cylinder(pos=(0,2,1), axis=(5,0,0), radius=1)
 
-#Setting the size of the window for the plot
+# Setting the size of the window for the plot
 fig = plt.figure(figsize=(8,5.5))
 ax = fig.add_subplot(111, projection='3d')
 # Set the aspect ratio to 1 so our spheres look spherical
@@ -37,7 +37,6 @@ def draw_sphere(r, x, y, z, c):
 
     
 #https://stackoverflow.com/questions/42264232/draw-ellipse-in-matplotlib-given-the-focii (Info for ellipses)
-
 def elliptical_orbit(semimajor_axis, semiminor_axis, eccentricity):
     # Compute ellipse parameters
     a1 = 0                                                                                         # Foci one x-coordinate
@@ -56,32 +55,42 @@ def elliptical_orbit(semimajor_axis, semiminor_axis, eccentricity):
     y = y0 + semimajor_axis * np.cos(t) * np.sin(phi_ell) + semiminor_axis * np.sin(t) * np.cos(phi_ell)
 
     # Plot ellipse
-    plt.plot(x, y, linewidth=.75)
+    #plt.plot(x, y, linewidth=.75)
+    return x0, y0, phi_ell
 
 
 """Calculate Orbits"""
-mercury_orbit = elliptical_orbit(57910000, 56670300, .2056)
-venus_orbit = elliptical_orbit(108210000, 107997400, .0067)
-earth_orbit = elliptical_orbit(149600000, 149978300, .0167)
-mars_orbit = elliptical_orbit(227920000, 226990500, .0935)
-jupiter_orbit = elliptical_orbit(778570000, 778064300, .0489)
-saturn_orbit = elliptical_orbit(1433530000, 488114900, .0565)
-uranus_orbit = elliptical_orbit(2872460000, 2866961900, .0457)
-neptune_orbit = elliptical_orbit(4495060000, 4499727700, .0113)
+#mercury_orbit = elliptical_orbit(57910000, 56670300, .2056)
+#venus_orbit = elliptical_orbit(108210000, 107997400, .0067)
+#earth_orbit = elliptical_orbit(149600000, 149978300, .0167)
+#mars_orbit = elliptical_orbit(227920000, 226990500, .0935)
+#jupiter_orbit = elliptical_orbit(778570000, 778064300, .0489)
+#saturn_orbit = elliptical_orbit(1433530000, 488114900, .0565)
+#uranus_orbit = elliptical_orbit(2872460000, 2866961900, .0457)
+#neptune_orbit = elliptical_orbit(4495060000, 4499727700, .0113)
 
 
-#A way to plot a planet on a given line
-N = 20
-tuples = []
+# A way to plot a planet on a given circular line
+N = 8
 for i in range(N):
     theta1 = 2*np.pi*i/N
     x = np.cos(theta1)
     y = np.sin(theta1)
     draw_sphere(69911000, (x*778600000), (y*778600000), 0, 'orange')                              # on a unit circle
+    
+    
+# A way to plot a planet on a given planets orbital line
+N = 8
+for i in range(N):
+    saturn_orbit = elliptical_orbit(1433530000, 488114900, .0565)
+    x = x0 + semimajor_axis * np.cos(2*np.pi*i/N) * np.cos(phi_ell) - semiminor_axis * np.sin(2*np.pi*i/N) * np.sin(phi_ell)
+    y = y0 + semimajor_axis * np.cos(2*np.pi*i/N) * np.sin(phi_ell) + semiminor_axis * np.sin(2*np.pi*i/N) * np.cos(phi_ell)
+    draw_sphere(58232000, x, y, 0, 'orange')
 
 
 #https://matplotlib.org/gallery/color/named_colors.html (color lists link)    
 """Draw planet as spheres at specific points"""
+"""Note these planet radii are scaled up by a factor of 10^3. The sun is just multiplied by 50."""
 sun = draw_sphere(695956*50, 0, 0, 0, 'yellow')                     #####figure out how to scale this when you zoom in to graph.
 mercury = draw_sphere(2440000, 57910000, 0, 0, 'lightgrey')
 venus = draw_sphere(6052000, 108210000, 0, 0, 'oldlace')
