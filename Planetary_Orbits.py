@@ -98,7 +98,7 @@ sun = draw_sphere(695956*50, 0, 0, 0, 'yellow')                     #####figure 
 """ Starting parameters """
 repeat_amount = 4
 N = 50
-n = 0
+min_range = 0
 repeat = 0
 calc_range = N
 
