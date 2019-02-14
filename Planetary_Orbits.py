@@ -9,12 +9,11 @@ import itertools
 
 # Setting the size of the window for the plot
 fig = plt.figure(figsize=(8,5))
-fig.suptitle('Solar System', fontsize = 14)
 ax = fig.add_subplot(111, projection='3d')
+plt.title('Solar System', fontsize = 14, color = 'white')
 fig.subplots_adjust(top=1,bottom=0,left=0,right=1)
 
-# Set the aspect ratio to 1 so our spheres look spherical
-ax.set_aspect('equal')
+
 
 # Turn off the axis planes
 ax.set_axis_off()
@@ -24,8 +23,8 @@ ax.set_xticklabels([])
 ax.set_yticklabels([])
 ax.set_zticklabels([])
 
-##fig.set_facecolor('black')
-##ax.set_facecolor('black') 
+fig.set_facecolor('black')
+ax.set_facecolor('black') 
 ax.grid(False) 
 ax.w_xaxis.pane.fill = False
 ax.w_yaxis.pane.fill = False
@@ -36,6 +35,8 @@ ax.set_xlim(-limit, limit)
 ax.set_ylim(-limit, limit)
 ax.set_zlim(-limit, limit)
 
+# Set the aspect ratio to 1 so our spheres look spherical
+ax.set_aspect('equal')
 
 # The Cartesian coordinates of the unit sphere              #####possibly redesign sphere
 points_range = 25
@@ -96,8 +97,8 @@ planet_smooth = 3
 sun = draw_sphere(695956*50, 0, 0, 0, 'yellow')                     #####figure out how to scale this when you zoom in to graph.
 
 """ Starting parameters """
-repeat_amount = 5
-N = 75                                  # The lower the value the faster and more jumpy the planets orbit.
+repeat_amount = 10
+N = 20                               # The lower the value the faster and more jumpy the planets orbit.
 min_range = 0
 repeat = 0
 calc_range = N
@@ -107,6 +108,10 @@ while repeat < repeat_amount:
     repeat = repeat + 1
     # A way to plot a planet on a given planets orbital line
     for i in range(min_range, calc_range):
+        
+        # Show the amount of years have pass ed during the orbits
+        year_calc = round(i/N, 1)
+        fig.suptitle(str(year_calc) + ' Earth years' , y = .8, fontsize = 9, color = 'white')
 
         
         ######################################################### Mercury #########################################################
@@ -116,7 +121,6 @@ while repeat < repeat_amount:
         r_me = 2440000
         semimajor_axis = 57910000
         semiminor_axis = 56670300
-        color = 'lightgrey'
         eccentricity = .2056
         a1 = 0                                                                                                          # Foci one x-coordinate
         b1 = 0                                                                                                          # Foci one y-coordinate
@@ -145,7 +149,7 @@ while repeat < repeat_amount:
         x0 = (r_me* np.sin(phi) * np.cos(theta)) + x
         y0 = (r_me*np.sin(phi) * np.sin(theta)) + y
         z0 = (r_me*np.cos(phi)) + z
-        mercury = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color=color)
+        mercury = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='lightgrey')
 
 
 
@@ -157,7 +161,6 @@ while repeat < repeat_amount:
         r_v = 6052000
         semimajor_axis = 108210000
         semiminor_axis = 107997400
-        color = 'navajowhite'
         eccentricity = .0067
         a1 = 0                                                                                                          # Foci one x-coordinate
         b1 = 0                                                                                                         # Foci one y-coordinate
@@ -185,7 +188,7 @@ while repeat < repeat_amount:
         x0 = (r_v* np.sin(phi) * np.cos(theta)) + x
         y0 = (r_v*np.sin(phi) * np.sin(theta)) + y
         z0 = (r_v*np.cos(phi)) + z
-        venus = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color=color)
+        venus = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='navajowhite')
 
 
 
@@ -197,7 +200,6 @@ while repeat < repeat_amount:
         r_e = 6371000
         semimajor_axis = 149600000
         semiminor_axis = 149978300
-        color = 'dodgerblue'
         eccentricity = .0167
         a1 = 0                                                                                                          # Foci one x-coordinate
         b1 = 0                                                                                                          # Foci one y-coordinate
@@ -225,7 +227,7 @@ while repeat < repeat_amount:
         x0 = (r_e* np.sin(phi) * np.cos(theta)) + x
         y0 = (r_e*np.sin(phi) * np.sin(theta)) + y
         z0 = (r_e*np.cos(phi)) + z
-        earth = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color=color)
+        earth = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='dodgerblue')
 
         
 
@@ -237,7 +239,6 @@ while repeat < repeat_amount:
         r_ma = 3390000
         semimajor_axis = 227920000
         semiminor_axis = 226990500
-        color = 'indianred'
         eccentricity = .0935
         a1 = 0                                                                                                          # Foci one x-coordinate
         b1 = 0                                                                                                          # Foci one y-coordinate
@@ -266,7 +267,7 @@ while repeat < repeat_amount:
         x0 = (r_ma* np.sin(phi) * np.cos(theta)) + x
         y0 = (r_ma*np.sin(phi) * np.sin(theta)) + y
         z0 = (r_ma*np.cos(phi)) + z
-        mars = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color=color)
+        mars = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='indianred')
         
 
 
@@ -278,7 +279,6 @@ while repeat < repeat_amount:
         r_j = 69911000
         semimajor_axis = 778570000
         semiminor_axis = 778064300
-        color = 'orange'
         eccentricity = .0489
         a1 = 0                                                                                                          # Foci one x-coordinate
         b1 = 0                                                                                                          # Foci one y-coordinate
@@ -306,7 +306,8 @@ while repeat < repeat_amount:
         x0 = (r_j* np.sin(phi) * np.cos(theta)) + x
         y0 = (r_j*np.sin(phi) * np.sin(theta)) + y
         z0 = (r_j*np.cos(phi)) + z
-        jupiter = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color=color) 
+        jupiter = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='orange')
+        #jupiter1 = ax.contour(x0, y0, z0,  20, cmap=cm.Oranges) 
 
 
 
@@ -318,7 +319,6 @@ while repeat < repeat_amount:
         r_s = 58232000
         semimajor_axis = 1433530000
         semiminor_axis = 1431240077
-        color = 'navajowhite'
         eccentricity = .0565
         a1 = 0                                                                                                          # Foci one x-coordinate
         b1 = 0                                                                                                          # Foci one y-coordinate
@@ -346,7 +346,7 @@ while repeat < repeat_amount:
         x0 = (r_s* np.sin(phi) * np.cos(theta)) + x
         y0 = (r_s*np.sin(phi) * np.sin(theta)) + y
         z0 = (r_s*np.cos(phi)) + z
-        saturn = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color=color)
+        saturn = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='navajowhite')
 
 
 
@@ -358,7 +358,6 @@ while repeat < repeat_amount:
         r_u = 25362000
         semimajor_axis = 2872460000
         semiminor_axis = 2866961900
-        color = 'lightblue'
         eccentricity = .0457
         a1 = 0                                                                                                          # Foci one x-coordinate
         b1 = 0                                                                                                          # Foci one y-coordinate
@@ -386,7 +385,7 @@ while repeat < repeat_amount:
         x0 = (r_u* np.sin(phi) * np.cos(theta)) + x
         y0 = (r_u*np.sin(phi) * np.sin(theta)) + y
         z0 = (r_u*np.cos(phi)) + z
-        uranus = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color=color)
+        uranus = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='lightblue')
 
 
 
@@ -398,7 +397,6 @@ while repeat < repeat_amount:
         r_n = 24622000
         semimajor_axis = 4495060000
         semiminor_axis = 4499727700
-        color = 'blue'
         eccentricity = .0113
         a1 = 0                                                                                                          # Foci one x-coordinate
         b1 = 0                                                                                                          # Foci one y-coordinate
@@ -426,10 +424,9 @@ while repeat < repeat_amount:
         x0 = (r_n* np.sin(phi) * np.cos(theta)) + x
         y0 = (r_n*np.sin(phi) * np.sin(theta)) + y
         z0 = (r_n*np.cos(phi)) + z
-        neptune = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color=color) 
+        neptune = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='blue') 
 
 
-        
         plt.draw()
         plt.pause(.00000000000000000000000000001)
         ax.collections.remove(mercury)
@@ -437,6 +434,8 @@ while repeat < repeat_amount:
         ax.collections.remove(earth)
         ax.collections.remove(mars)
         ax.collections.remove(jupiter)
+        #for npl in jupiter1.collections:
+                #npl.remove()
         ax.collections.remove(saturn)
         ax.collections.remove(uranus)
         ax.collections.remove(neptune)
@@ -446,5 +445,6 @@ while repeat < repeat_amount:
         plt.close(fig)
     else:
         calc_range = (min_range+N)
+        
+print("The program has finished after calculating the planets orbits for " + str(repeat_amount) + " Earth years")
 
-print("The program has finished after calculating the planets orbits for " + str(repeat_amount - 1) + " Earth years")
