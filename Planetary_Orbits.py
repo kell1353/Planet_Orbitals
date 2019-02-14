@@ -96,8 +96,8 @@ planet_smooth = 3
 sun = draw_sphere(695956*50, 0, 0, 0, 'yellow')                     #####figure out how to scale this when you zoom in to graph.
 
 """ Starting parameters """
-repeat_amount = 4
-N = 50
+repeat_amount = 5
+N = 75                                  # The lower the value the faster and more jumpy the planets orbit.
 min_range = 0
 repeat = 0
 calc_range = N
@@ -108,7 +108,6 @@ while repeat < repeat_amount:
     # A way to plot a planet on a given planets orbital line
     for i in range(min_range, calc_range):
 
-        
         
         ######################################################### Mercury #########################################################
         
@@ -443,6 +442,9 @@ while repeat < repeat_amount:
         ax.collections.remove(neptune)
 
         min_range = i + 1
-    calc_range = (min_range)*repeat_amount 
+    if repeat > repeat_amount:
+        plt.close(fig)
+    else:
+        calc_range = (min_range+N)
 
-print("The Program has Finished")
+print("The program has finished after calculating the planets orbits for " + str(repeat_amount - 1) + " Earth years")
