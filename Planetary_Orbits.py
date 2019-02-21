@@ -50,7 +50,6 @@ def draw_sphere(r, x, y, z, c):
     z = (r*np.cos(phi)) + z
     s = 1
     planet = ax.plot_surface(x, y, z,  rstride=s, cstride=s, color=c)                #(having higher strides allow the program to run faster)
-   
     
 #https://stackoverflow.com/questions/42264232/draw-ellipse-in-matplotlib-given-the-focii (Info for ellipses)
 def elliptical_orbit_line(semimajor_axis, semiminor_axis, eccentricity):
@@ -71,7 +70,7 @@ def elliptical_orbit_line(semimajor_axis, semiminor_axis, eccentricity):
     y = y0 + semimajor_axis * np.cos(t) * np.sin(phi_ell) + semiminor_axis * np.sin(t) * np.cos(phi_ell)
 
     # Plot ellipse
-    plt.plot(x, y, linewidth=.75)
+    plt.plot(x, y, linewidth=.5)
 
 
 
@@ -97,8 +96,9 @@ planet_smooth = 3
 sun = draw_sphere(695956*50, 0, 0, 0, 'yellow')                     #####figure out how to scale this when you zoom in to graph.
 
 """ Starting parameters """
-repeat_amount = 10
-N = 20                               # The lower the value the faster and more jumpy the planets orbit.
+#repeat_amount = 5
+repeat_amount = float(input("How many years would you like to see?: "))
+N = 25                            # The lower the value the faster and more jumpy the planets orbit. (25 is ideal)
 min_range = 0
 repeat = 0
 calc_range = N
@@ -427,24 +427,24 @@ while repeat < repeat_amount:
         neptune = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='blue') 
 
 
-        plt.draw()
-        plt.pause(.00000000000000000000000000001)
-        ax.collections.remove(mercury)
-        ax.collections.remove(venus)
-        ax.collections.remove(earth)
-        ax.collections.remove(mars)
-        ax.collections.remove(jupiter)
-        #for npl in jupiter1.collections:
-                #npl.remove()
-        ax.collections.remove(saturn)
-        ax.collections.remove(uranus)
-        ax.collections.remove(neptune)
-
         min_range = i + 1
-    if repeat > repeat_amount:
-        plt.close(fig)
-    else:
-        calc_range = (min_range+N)
-        
+        if year_calc == repeat_amount:
+            plt.show()           
+        else:
+            #plt.draw()
+            plt.pause(.00000000000000000000000000001)
+            ax.collections.remove(mercury)
+            ax.collections.remove(venus)
+            ax.collections.remove(earth)
+            ax.collections.remove(mars)
+            ax.collections.remove(jupiter)
+            #for npl in jupiter1.collections:
+                    #npl.remove()
+            ax.collections.remove(saturn)
+            ax.collections.remove(uranus)
+            ax.collections.remove(neptune)
+
+    calc_range = (min_range+N)
+    
 print("The program has finished after calculating the planets orbits for " + str(repeat_amount) + " Earth years")
 
