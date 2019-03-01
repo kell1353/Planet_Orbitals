@@ -72,6 +72,38 @@ def elliptical_orbit_line(semimajor_axis, semiminor_axis, eccentricity):
     # Plot ellipse
     plt.plot(x, y, linewidth=.5)
 
+    
+
+
+def elliptical_orbit_line_pluto(semimajor_axis, semiminor_axis, eccentricity):
+    # Compute ellipse parameters
+    a1 = 0                                                                                                                      # Foci one x-coordinate
+    b1 = 0                                                                                                                      # Foci one y-coordinate
+    b2 = 0                                                                                                                      # Foci two y-coordinate
+    x0 = semimajor_axis * eccentricity                                                            # Center x-value
+    y0 = (b1 + b2) / 2                                                                                                 # Center y-value
+    f = np.sqrt((a1 - x0)**2 + (b1 - y0)**2)                                                       # Distance from center to focus
+    a2 = (2 * x0) - b2                                                                                                  # Foci two x-coordinate
+    phi_ell = np.arctan2((b1 - b2), (a1 - a2))                                                   # Angle between major axis and x-axis
+
+    # Parametric plot in t
+    resolution = 1000
+    t = np.linspace(0, 2*np.pi, resolution)
+##    x = x0 + semimajor_axis * np.cos(t) * np.cos(phi_ell) - semiminor_axis * np.sin(t) * np.sin(phi_ell)
+##    y = y0 + semimajor_axis * np.cos(t) * np.sin(phi_ell) + semiminor_axis * np.sin(t) * np.cos(phi_ell)
+    theta = 45
+    x = x0 + semimajor_axis * np.cos(t) * np.cos(np.radians(theta)) - semiminor_axis * np.sin(t) * np.sin(np.radians(theta))
+    y = y0 + semimajor_axis * np.cos(t) * np.sin(np.radians(theta)) + semiminor_axis * np.sin(t) * np.cos(np.radians(theta))
+
+
+##    r = np.sqrt(((x-0)**2)+((y-0)**2))
+##    theta = 45
+##    x1 = x*np.cos(np.radians(theta)) + y*np.sin(np.radians(theta))
+##    y1 = -x*np.cos(np.radians(theta)) + y*np.sin(np.radians(theta))
+
+    # Plot ellipse
+    ##plt.plot(x1, y1, linewidth=.5)    
+    plt.plot(x, y, linewidth=.5)    
 
 
 """Draw Orbits"""
@@ -83,6 +115,8 @@ jupiter_orbit = elliptical_orbit_line(778570000, 778064300, .0489)
 saturn_orbit = elliptical_orbit_line(1433530000, 1431240077, .0565)
 uranus_orbit = elliptical_orbit_line(2872460000, 2866961900, .0457)
 neptune_orbit = elliptical_orbit_line(4495060000, 4499727700, .0113)
+
+pluto_orbit =  elliptical_orbit_line_pluto(5906380000, 5720653186, .2488)
 
 
 #https://matplotlib.org/gallery/color/named_colors.html (color lists link)    
@@ -427,6 +461,15 @@ while repeat < repeat_amount:
         neptune = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='blue') 
 
 
+
+
+        ######################################################### Pluto #########################################################
+
+
+
+
+
+
         min_range = i + 1
         if year_calc == repeat_amount:
             plt.show()           
@@ -447,4 +490,3 @@ while repeat < repeat_amount:
     calc_range = (min_range+N)
     
 print("The program has finished after calculating the planets orbits for " + str(repeat_amount) + " Earth years")
-
