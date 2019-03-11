@@ -7,13 +7,11 @@ from matplotlib import cm, colors
 from mpl_toolkits.mplot3d import Axes3D
 import itertools
 
-
 # Setting the size of the window for the plot
 fig = plt.figure(figsize=(8,5))
 ax = fig.add_subplot(111, projection='3d')
 plt.title('Solar System', fontsize = 14, color = 'white')
 fig.subplots_adjust(top=1,bottom=0,left=0,right=1)
-
 
 
 # Turn off the axis planes
@@ -45,12 +43,16 @@ phi = np.linspace(0, np.pi, points_range)
 theta = np.linspace(0, 2*np.pi, points_range)
 phi, theta = np.meshgrid(phi, theta)
 
+
+
 def draw_sphere(r, x, y, z, c):
     x = (r* np.sin(phi) * np.cos(theta)) + x
     y = (r*np.sin(phi) * np.sin(theta)) + y
     z = (r*np.cos(phi)) + z
     s = 1
     planet = ax.plot_surface(x, y, z,  rstride=s, cstride=s, color=c)                #(having higher strides allow the program to run faster)
+
+
     
 #https://stackoverflow.com/questions/42264232/draw-ellipse-in-matplotlib-given-the-focii (Info for ellipses)
 def elliptical_orbit_line(semimajor_axis, semiminor_axis, eccentricity, deg_inclination):
@@ -74,59 +76,88 @@ def elliptical_orbit_line(semimajor_axis, semiminor_axis, eccentricity, deg_incl
         if x[i] > 0:
             r = -(np.sqrt(((x[i]-0)**2)))
         z = r*np.tan(np.radians(deg_inclination))
-        z_list.append(r*np.tan(np.radians(deg_inclination)))
+        z_list.append(z)
 
     # Plot ellipse
     plt.plot(x, y, z_list, linewidth=.25)
 
 
 
-##def plot_planet(semimajor_axis, semiminor_axis, eccentricity, deg_inclination):
-##        global pluto
-##        # planet parameters
-##        avgDist_pl = 3670000000
-##        r_pl = 1187000
-##        # orbit parameters
-##        deg_inclination, eccentricity, init_theta = 17.16, .2488, 0
-##        semimajor_axis, semiminor_axis = 5906380000, 5720653186
-##        # ellipse parameters
-##        a1, b1, b2 = 0, 0, 0                                        # Foci one x-coordinate, # Foci one y-coordinate, # Foci two y-coordinate
-##        x_center = semimajor_axis * eccentricity                                                # Center x-value
-##        y_center = (b1 + b2) / 2                                                                                     # Center y-value
-##        a2 = (2 * x_center) - b2                                                                                     # Foci two x-coordinate
-##        
-##        # Orbital Velocity Calculation in kilometers per second (using Kepler's Laws)
-##        vel_n = (np.sqrt((grav_constant*mass_sun)*((2/(avgDist_pl*1000)) - (1/(semiminor_axis*1000)))))/1000
-##        # Orbital Period calulation in years (using Kepler's Laws)
-##        pl_year = ((2*np.pi)*np.sqrt(((semimajor_axis*1000)**3)/(grav_constant*mass_sun)))/(60*60*24*365)
-##        # Scaling the orbital period in refernce to earths year
-##        scaled_per = earth_year/pl_year 
-##
-##        # Getting individual orbital locations
-##        x = (x_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)) - semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per))* np.sin(np.radians(init_theta)))*np.cos(np.radians(deg_inclination))
-##        y = (y_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.sin(np.radians(init_theta)) + semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)))
-##
-##        r = np.sqrt(((x - 0)**2))
-##        if x > 0:
-##                r = -(np.sqrt(((x - 0)**2)))
-##        z = r*np.tan(np.radians(deg_inclination))
-##
-##        x0 = (r_pl* np.sin(phi) * np.cos(theta)) + x
-##        y0 = (r_pl*np.sin(phi) * np.sin(theta)) + y
-##        z0 = (r_pl*np.cos(phi)) + z
-##        pluto = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='lightgrey')
-##        #pl_text = ax.text(x, y, z + r_pl*100, "Pluto", color='white', ha = "center")
-    
+def plot_object(name, semimajor_axis, semiminor_axis, eccentricity, deg_inclination, planet_rad, color):
+        global mercury; global me_text
+        global venus; global v_text
+        global earth; global e_text
+        global mars; global ma_text
+        global jupiter; global j_text
+        global saturn; global s_text
+        global uranus; global u_text
+        global neptune; global n_text
+        global pluto; global pluto_text
+
+        # ellipse parameters
+        init_theta = 0
+        a1, b1, b2 = 0, 0, 0                                        # Foci one x-coordinate, # Foci one y-coordinate, # Foci two y-coordinate
+        x_center = semimajor_axis * eccentricity                                                # Center x-value
+        y_center = (b1 + b2) / 2                                                                                     # Center y-value
+        a2 = (2 * x_center) - b2                                                                                     # Foci two x-coordinate
         
-"""Draw Orbits"""
-mercury_orbit = elliptical_orbit_line(57910000, 56670300, .2056, 7)
-venus_orbit = elliptical_orbit_line(108210000, 107997400, .0067, 3.390)
-earth_orbit = elliptical_orbit_line(149600000, 149978300, .0167, 0)
-mars_orbit = elliptical_orbit_line(227920000, 226990500, .0935, 1.850)
-jupiter_orbit = elliptical_orbit_line(778570000, 778064300, .0489, 1.304)
-saturn_orbit = elliptical_orbit_line(1433530000, 1431240077, .0565, 2.485)
-uranus_orbit = elliptical_orbit_line(2872460000, 2866961900, .0457, .772)
-neptune_orbit = elliptical_orbit_line(4495060000, 4499727700, .0113, 1.769)
+        # Orbital Period calulation in years (using Kepler's Laws)
+        planet_year = ((2*np.pi)*np.sqrt(((semimajor_axis*1000)**3)/(grav_constant*mass_sun)))/(60*60*24*365)
+        # Scaling the orbital period in refernce to earths year
+        scaled_per = earth_year/planet_year 
+
+        # Getting individual orbital locations
+        x = (x_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)) - semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per))* np.sin(np.radians(init_theta)))*np.cos(np.radians(deg_inclination))
+        y = (y_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.sin(np.radians(init_theta)) + semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)))
+
+        r = np.sqrt(((x - 0)**2))
+        if x > 0:
+                r = -(np.sqrt(((x - 0)**2)))
+        z = r*np.tan(np.radians(deg_inclination))
+
+        x0 = (planet_rad* np.sin(phi) * np.cos(theta)) + x
+        y0 = (planet_rad*np.sin(phi) * np.sin(theta)) + y
+        z0 = (planet_rad*np.cos(phi)) + z
+
+        if name == "Mercury":
+            mercury = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color= color)
+            me_text = ax.text(x, y, z + planet_rad*10, name, color='white', ha = "center")
+        elif name == "Venus":
+            venus = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color= color)
+            v_text = ax.text(x, y, z + planet_rad*10, name, color='white', ha = "center")
+        elif name == "Earth":
+            earth= ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color= color)
+            e_text = ax.text(x, y, z + planet_rad*10, name, color='white', ha = "center")
+        elif name == "Mars":
+            mars = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color= color)
+            ma_text = ax.text(x, y, z + planet_rad*10, name, color='white', ha = "center")
+        elif name == "Jupiter":
+            jupiter = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color= color)
+            j_text = ax.text(x, y, z + planet_rad*2, name, color='white', ha = "center")
+        elif name == "Saturn":
+            saturn = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color= color)
+            s_text = ax.text(x, y, z + planet_rad*3, name, color='white', ha = "center")
+        elif name == "Uranus":
+            uranus = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color= color)
+            u_text = ax.text(x, y, z + planet_rad*10, name, color='white', ha = "center")
+        elif name == "Neptune":
+            neptune = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color= color)
+            n_text = ax.text(x, y, z + planet_rad*10, name, color='white', ha = "center")
+        elif name == "Pluto":
+            pluto = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color= color)
+            pluto_text = ax.text(x, y, z + planet_rad*100, name, color='white', ha = "center")
+    
+
+        
+"""Draw Celestial Body Orbits"""
+mercury_orbit = elliptical_orbit_line(57910000, 56672817, .2056, 7.000)
+venus_orbit = elliptical_orbit_line(108210000, 108207571, .0067, 3.390)
+earth_orbit = elliptical_orbit_line(149600000, 149579138, .0167, 0)
+mars_orbit = elliptical_orbit_line(227920000, 226921546, .0935, 1.850)
+jupiter_orbit = elliptical_orbit_line(778570000, 777638581, .0489, 1.304)
+saturn_orbit = elliptical_orbit_line(1433530000, 1431240078, .0565, 2.485)
+uranus_orbit = elliptical_orbit_line(2872460000, 2869458880, .0457, .772)
+neptune_orbit = elliptical_orbit_line(4495060000, 4494773004, .0113, 1.769)
 pluto_orbit =  elliptical_orbit_line(5906380000, 5720653186, .2488, 17.16)
 
 
@@ -158,360 +189,18 @@ while repeat < repeat_amount:
         year_calc = round(i/N, 1)
         fig.suptitle(str(year_calc) + ' Earth years' , y = .8, fontsize = 9, color = 'white')
 
-        
-        ######################################################### Mercury #########################################################
-        
-        # planet parameters
-        avgDist_me = 57900000
-        r_me = 2440000
-        # orbit parameters
-        deg_inclination, eccentricity, init_theta = 7.000, .2056, 0
-        semimajor_axis, semiminor_axis = 57910000, 56670300
-        # ellipse parameters
-        a1, b1, b2 = 0, 0, 0                                        # Foci one x-coordinate, # Foci one y-coordinate, # Foci two y-coordinate
-        x_center = semimajor_axis * eccentricity                                                # Center x-value
-        y_center = (b1 + b2) / 2                                                                                     # Center y-value
-        a2 = (2 * x_center) - b2                                                                                     # Foci two x-coordinate
 
-        #Orbital Velocity calculation in kilometers per second (using Kepler's Laws)
-        vel_me = (np.sqrt((grav_constant*mass_sun)*((2/(avgDist_me*1000)) - (1/(semiminor_axis*1000)))))/1000
-        #Orbital Period calulation in years (using Kepler's Laws)
-        me_year = ((2*np.pi)*np.sqrt(((semimajor_axis*1000)**3)/(grav_constant*mass_sun)))/(60*60*24*365)
-        #Scaling the orbital period in refernce to earths year
-        scaled_per = earth_year/me_year
-    
-        # Getting individual orbital locations
-        x = (x_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)) - semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per))* np.sin(np.radians(init_theta)))*np.cos(np.radians(deg_inclination))
-        y = (y_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.sin(np.radians(init_theta)) + semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)))
-        
-        r = np.sqrt(((x - 0)**2))
-        if x > 0:
-                r = -(np.sqrt(((x - 0)**2)))
-        z = r*np.tan(np.radians(deg_inclination))
-
-        x0 = (r_me* np.sin(phi) * np.cos(theta)) + x
-        y0 = (r_me*np.sin(phi) * np.sin(theta)) + y
-        z0 = (r_me*np.cos(phi)) + z
-        mercury = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='lightgrey')
-        me_text = ax.text(x, y, z + r_me*10, "Mercury", color='white', ha = "center")
-
-
-
-
-        ######################################################### Venus #########################################################
-        
-        #Initial planet information
-        avgDist_v = 108200000
-        r_v = 6052000
-        # orbit parameters
-        deg_inclination, eccentricity, init_theta = 3.390, .0067, 0
-        semimajor_axis, semiminor_axis = 108210000, 107997400
-        # ellipse parameters
-        a1, b1, b2 = 0, 0, 0                                        # Foci one x-coordinate, # Foci one y-coordinate, # Foci two y-coordinate
-        x_center = semimajor_axis * eccentricity                                                # Center x-value
-        y_center = (b1 + b2) / 2                                                                                     # Center y-value
-        a2 = (2 * x_center) - b2                                                                                     # Foci two x-coordinate
-        
-       #Orbital Velocity Calculation in kilometers per second (using Kepler's Laws)
-        vel_v = (np.sqrt((grav_constant*mass_sun)*((2/(avgDist_v*1000)) - (1/(semiminor_axis*1000)))))/1000
-        #Orbital Period calulation in years (using Kepler's Laws)
-        v_year = ((2*np.pi)*np.sqrt(((semimajor_axis*1000)**3)/(grav_constant*mass_sun)))/(60*60*24*365)
-        #Scaling the orbital period in refernce to earths year
-        scaled_per = earth_year/v_year 
-        
-        # Getting individual orbital locations
-        x = (x_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)) - semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per))* np.sin(np.radians(init_theta)))*np.cos(np.radians(deg_inclination))
-        y = (y_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.sin(np.radians(init_theta)) + semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)))
-        
-        r = np.sqrt(((x - 0)**2))
-        if x > 0:
-                r = -(np.sqrt(((x - 0)**2)))
-        z = r*np.tan(np.radians(deg_inclination))
-
-        x0 = (r_v* np.sin(phi) * np.cos(theta)) + x
-        y0 = (r_v*np.sin(phi) * np.sin(theta)) + y
-        z0 = (r_v*np.cos(phi)) + z
-        venus = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='navajowhite')
-        v_text = ax.text(x, y, z + r_v*10, "Venus", color='white', ha = "center")
-
-
-
-
-        ######################################################### Earth #########################################################
-        
-        # planet parameters
-        avgDist_e = 149600000
-        r_e = 6371000
-        # orbit parameters
-        deg_inclination, eccentricity, init_theta = 0.000, .0167, 0
-        semimajor_axis, semiminor_axis = 149600000, 149978300
-        # ellipse parameters
-        a1, b1, b2 = 0, 0, 0                                        # Foci one x-coordinate, # Foci one y-coordinate, # Foci two y-coordinate
-        x_center = semimajor_axis * eccentricity                                                # Center x-value
-        y_center = (b1 + b2) / 2                                                                                     # Center y-value
-        a2 = (2 * x_center) - b2                                                                                     # Foci two x-coordinate
-
-        #Orbital Velocity Calculation in kilometers per second (using Kepler's Laws)
-        vel_e = (np.sqrt((grav_constant*mass_sun)*((2/(avgDist_v*1000)) - (1/(semiminor_axis*1000)))))/1000
-        #Orbital Period calulation in years (using Kepler's Laws)
-        e_year = ((2*np.pi)*np.sqrt(((semimajor_axis*1000)**3)/(grav_constant*mass_sun)))/(60*60*24*365)
-        #Scaling the orbital period in refernce to earths year
-        scaled_per = earth_year/e_year
-        
-        # Getting individual orbital locations
-        x = (x_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)) - semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per))* np.sin(np.radians(init_theta)))*np.cos(np.radians(deg_inclination))
-        y = (y_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.sin(np.radians(init_theta)) + semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)))
-        
-        r = np.sqrt(((x - 0)**2))
-        if x > 0:
-                r = -(np.sqrt(((x - 0)**2)))
-        z = r*np.tan(np.radians(deg_inclination))
-
-        x0 = (r_e* np.sin(phi) * np.cos(theta)) + x
-        y0 = (r_e*np.sin(phi) * np.sin(theta)) + y
-        z0 = (r_e*np.cos(phi)) + z
-        earth = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='dodgerblue')
-        e_text = ax.text(x, y, z + r_e*10, "Earth", color='white', ha = "center")
-
-        
-
-
-        ######################################################### Mars #########################################################
-
-        # planet parameters
-        avgDist_ma = 227900000
-        r_ma = 3390000
-        # orbit parameters
-        deg_inclination, eccentricity, init_theta = 1.850, .0935, 0
-        semimajor_axis, semiminor_axis = 227920000, 226990500
-        # ellipse parameters
-        a1, b1, b2 = 0, 0, 0                                        # Foci one x-coordinate, # Foci one y-coordinate, # Foci two y-coordinate
-        x_center = semimajor_axis * eccentricity                                                # Center x-value
-        y_center = (b1 + b2) / 2                                                                                     # Center y-value
-        a2 = (2 * x_center) - b2                                                                                     # Foci two x-coordinate
-
-        # Orbital Velocity Calculation in kilometers per second (using Kepler's Laws)
-        vel_ma = (np.sqrt((grav_constant*mass_sun)*((2/(avgDist_v*1000)) - (1/(semiminor_axis*1000)))))/1000
-        # Orbital Period calulation in years (using Kepler's Laws)
-        ma_year = ((2*np.pi)*np.sqrt(((semimajor_axis*1000)**3)/(grav_constant*mass_sun)))/(60*60*24*365)
-        # Scaling the orbital period in refernce to earths year
-        scaled_per = earth_year/ma_year
-             
-        # Getting individual orbital locations
-        x = (x_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)) - semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per))* np.sin(np.radians(init_theta)))*np.cos(np.radians(deg_inclination))
-        y = (y_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.sin(np.radians(init_theta)) + semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)))
-        
-        r = np.sqrt(((x - 0)**2))
-        if x > 0:
-                r = -(np.sqrt(((x - 0)**2)))
-        z = r*np.tan(np.radians(deg_inclination))
-
-        x0 = (r_ma* np.sin(phi) * np.cos(theta)) + x
-        y0 = (r_ma*np.sin(phi) * np.sin(theta)) + y
-        z0 = (r_ma*np.cos(phi)) + z
-        mars = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='indianred')
-        ma_text = ax.text(x, y, z + r_ma*10, "Mars", color='white', ha = "center")
-        
-
-
-    
-        ######################################################### Jupiter #########################################################
-        
-        # planet parameters
-        avgDist_j = 778600000
-        r_j = 69911000
-        # orbit parameters
-        deg_inclination, eccentricity, init_theta = 1.304, .0489, 0
-        semimajor_axis, semiminor_axis  = 778570000, 778064300
-        # ellipse parameters
-        a1, b1, b2 = 0, 0, 0                                        # Foci one x-coordinate, # Foci one y-coordinate, # Foci two y-coordinate
-        x_center = semimajor_axis * eccentricity                                                # Center x-value
-        y_center = (b1 + b2) / 2                                                                                     # Center y-value
-        a2 = (2 * x_center) - b2                                                                                     # Foci two x-coordinate
-
-        # Orbital Velocity Calculation in kilometers per second (using Kepler's Laws)
-        vel_j = (np.sqrt((grav_constant*mass_sun)*((2/(avgDist_v*1000)) - (1/(semiminor_axis*1000)))))/1000
-        # Orbital Period calulation in years (using Kepler's Laws)
-        j_year = ((2*np.pi)*np.sqrt(((semimajor_axis*1000)**3)/(grav_constant*mass_sun)))/(60*60*24*365)
-        # Scaling the orbital period in refernce to earths year
-        scaled_per = earth_year/j_year
-        
-        # Getting individual orbital locations
-        x = (x_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)) - semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per))* np.sin(np.radians(init_theta)))*np.cos(np.radians(deg_inclination))
-        y = (y_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.sin(np.radians(init_theta)) + semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)))
-        
-        r = np.sqrt(((x - 0)**2))
-        if x > 0:
-                r = -(np.sqrt(((x - 0)**2)))
-        z = r*np.tan(np.radians(deg_inclination))
-
-        x0 = (r_j* np.sin(phi) * np.cos(theta)) + x
-        y0 = (r_j*np.sin(phi) * np.sin(theta)) + y
-        z0 = (r_j*np.cos(phi)) + z
-        jupiter = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='orange')
-        j_text = ax.text(x, y, z + r_j*2, "Jupiter", color='white', ha = "center")
-        #jupiter1 = ax.contour(x0, y0, z0,  20, cmap=cm.Oranges) 
-
-
-
-
-        ######################################################### Saturn #########################################################
-
-        # planet parameters
-        avgDist_s = 1433500000
-        r_s = 58232000
-        # orbit parameters
-        deg_inclination, eccentricity, init_theta = 2.485, .0565, 0
-        semimajor_axis, semiminor_axis = 1433530000, 1431240077
-        # ellipse parameters
-        a1, b1, b2 = 0, 0, 0                                        # Foci one x-coordinate, # Foci one y-coordinate, # Foci two y-coordinate
-        x_center = semimajor_axis * eccentricity                                                # Center x-value
-        y_center = (b1 + b2) / 2                                                                                     # Center y-value
-        a2 = (2 * x_center) - b2                                                                                     # Foci two x-coordinate
-
-       # Orbital Velocity Calculation in kilometers per second (using Kepler's Laws)
-        vel_s = (np.sqrt((grav_constant*mass_sun)*((2/(avgDist_v*1000)) - (1/(semiminor_axis*1000)))))/1000
-        # Orbital Period calulation in years (using Kepler's Laws)
-        s_year = ((2*np.pi)*np.sqrt(((semimajor_axis*1000)**3)/(grav_constant*mass_sun)))/(60*60*24*365)
-        # Scaling the orbital period in refernce to earths year
-        scaled_per = earth_year/s_year
-        
-        # Getting individual orbital locations
-        x = (x_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)) - semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per))* np.sin(np.radians(init_theta)))*np.cos(np.radians(deg_inclination))
-        y = (y_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.sin(np.radians(init_theta)) + semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)))
-        
-        r = np.sqrt(((x - 0)**2))
-        if x > 0:
-                r = -(np.sqrt(((x - 0)**2)))
-        z = r*np.tan(np.radians(deg_inclination))
-
-        x0 = (r_s* np.sin(phi) * np.cos(theta)) + x
-        y0 = (r_s*np.sin(phi) * np.sin(theta)) + y
-        z0 = (r_s*np.cos(phi)) + z
-        saturn = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='navajowhite')
-        s_text = ax.text(x, y, z + r_s*3, "Saturn", color='white', ha = "center")
-
-
-
-
-        ######################################################### Uranus #########################################################
-
-        # planet parameters
-        avgDist_u = 2872500000
-        r_u = 25362000
-        # orbit parameters
-        deg_inclination, eccentricity, init_theta = .772, .0457, 0
-        semimajor_axis, semiminor_axis = 2872460000, 2866961900
-        eccentricity = .0457
-        # ellipse parameters
-        a1, b1, b2 = 0, 0, 0                                        # Foci one x-coordinate, # Foci one y-coordinate, # Foci two y-coordinate
-        x_center = semimajor_axis * eccentricity                                                # Center x-value
-        y_center = (b1 + b2) / 2                                                                                     # Center y-value
-        a2 = (2 * x_center) - b2                                                                                     # Foci two x-coordinate
-
-       # Orbital Velocity Calculation in megameters per second (using Kepler's Laws)
-        vel_u = (np.sqrt((grav_constant*mass_sun)*((2/(avgDist_v*1000)) - (1/(semiminor_axis*1000)))))/1000
-        # Orbital Period calulation in years (using Kepler's Laws)
-        u_year = ((2*np.pi)*np.sqrt(((semimajor_axis*1000)**3)/(grav_constant*mass_sun)))/(60*60*24*365)
-        # Scaling the orbital period in refernce to earths year
-        scaled_per = earth_year/u_year
-        
-        # Getting individual orbital locations
-        x = (x_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)) - semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per))* np.sin(np.radians(init_theta)))*np.cos(np.radians(deg_inclination))
-        y = (y_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.sin(np.radians(init_theta)) + semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)))
-        
-        r = np.sqrt(((x - 0)**2))
-        if x > 0:
-                r = -(np.sqrt(((x - 0)**2)))
-        z = r*np.tan(np.radians(deg_inclination))
-
-        x0 = (r_u* np.sin(phi) * np.cos(theta)) + x
-        y0 = (r_u*np.sin(phi) * np.sin(theta)) + y
-        z0 = (r_u*np.cos(phi)) + z
-        uranus = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='lightblue')
-        u_text = ax.text(x, y, z + r_u*10, "Uranus", color='white', ha = "center")
-
-
-
-
-        ######################################################### Neptune #########################################################
-        
-        # planet parameters
-        avgDist_n = 4495100000
-        r_n = 24622000
-        # orbit parameters
-        deg_inclination, eccentricity, init_theta = 1.769, .0113, 0
-        semimajor_axis, semiminor_axis = 4495060000, 4499727700
-        # ellipse parameters
-        a1, b1, b2 = 0, 0, 0                                        # Foci one x-coordinate, # Foci one y-coordinate, # Foci two y-coordinate
-        x_center = semimajor_axis * eccentricity                                                # Center x-value
-        y_center = (b1 + b2) / 2                                                                                     # Center y-value
-        a2 = (2 * x_center) - b2                                                                                     # Foci two x-coordinate
-
-        # Orbital Velocity Calculation in kilometers per second (using Kepler's Laws)
-        vel_n = (np.sqrt((grav_constant*mass_sun)*((2/(avgDist_v*1000)) - (1/(semiminor_axis*1000)))))/1000
-        # Orbital Period calulation in years (using Kepler's Laws)
-        n_year = ((2*np.pi)*np.sqrt(((semimajor_axis*1000)**3)/(grav_constant*mass_sun)))/(60*60*24*365)
-        # Scaling the orbital period in refernce to earths year
-        scaled_per = earth_year/n_year
-
-        # Getting individual orbital locations
-        x = (x_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)) - semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per))* np.sin(np.radians(init_theta)))*np.cos(np.radians(deg_inclination))
-        y = (y_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.sin(np.radians(init_theta)) + semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)))
-        
-        r = np.sqrt(((x - 0)**2))
-        if x > 0:
-                r = -(np.sqrt(((x - 0)**2)))
-        z = r*np.tan(np.radians(deg_inclination))
-
-        x0 = (r_n* np.sin(phi) * np.cos(theta)) + x
-        y0 = (r_n*np.sin(phi) * np.sin(theta)) + y
-        z0 = (r_n*np.cos(phi)) + z
-        neptune = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='blue')
-        n_text = ax.text(x, y, z + r_n*10, "Neptune", color='white', ha = "center")
-
-
-
-
-        ######################################################### Pluto #########################################################
-
-        # planet parameters
-        avgDist_pl = 3670000000
-        r_pl = 1187000
-        # orbit parameters
-        deg_inclination, eccentricity, init_theta = 17.16, .2488, 0
-        semimajor_axis, semiminor_axis = 5906380000, 5720653186
-        # ellipse parameters
-        a1, b1, b2 = 0, 0, 0                                        # Foci one x-coordinate, # Foci one y-coordinate, # Foci two y-coordinate
-        x_center = semimajor_axis * eccentricity                                                # Center x-value
-        y_center = (b1 + b2) / 2                                                                                     # Center y-value
-        a2 = (2 * x_center) - b2                                                                                     # Foci two x-coordinate
-        
-        # Orbital Velocity Calculation in kilometers per second (using Kepler's Laws)
-        vel_n = (np.sqrt((grav_constant*mass_sun)*((2/(avgDist_pl*1000)) - (1/(semiminor_axis*1000)))))/1000
-        # Orbital Period calulation in years (using Kepler's Laws)
-        pl_year = ((2*np.pi)*np.sqrt(((semimajor_axis*1000)**3)/(grav_constant*mass_sun)))/(60*60*24*365)
-        # Scaling the orbital period in refernce to earths year
-        scaled_per = earth_year/pl_year 
-
-        # Getting individual orbital locations
-        x = (x_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)) - semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per))* np.sin(np.radians(init_theta)))*np.cos(np.radians(deg_inclination))
-        y = (y_center + semimajor_axis * np.cos(2*np.pi*i/(N/scaled_per)) * np.sin(np.radians(init_theta)) + semiminor_axis * np.sin(2*np.pi*i/(N/scaled_per)) * np.cos(np.radians(init_theta)))
-
-        r = np.sqrt(((x - 0)**2))
-        if x > 0:
-                r = -(np.sqrt(((x - 0)**2)))
-        z = r*np.tan(np.radians(deg_inclination))
-
-        x0 = (r_pl* np.sin(phi) * np.cos(theta)) + x
-        y0 = (r_pl*np.sin(phi) * np.sin(theta)) + y
-        z0 = (r_pl*np.cos(phi)) + z
-        pluto = ax.plot_surface(x0, y0, z0,  rstride=planet_smooth, cstride=planet_smooth, color='lightgrey')
-        pl_text = ax.text(x, y, z + r_pl*100, "Pluto", color='white', ha = "center")
-        #pl_line, = plt.plot([x, x], [y, y], [z + (r_pl * 2), z + r_pl*500], linewidth=.25, color = "white")  
-        
-        #pluto_planet =  plot_planet(5906380000, 5720653186, .2488, 17.16)
-
+        mercury_planet =  plot_object("Mercury", 57910000, 56672817, .2056, 7.000, 2440000, 'lightgrey')
+        venus_planet =  plot_object("Venus", 108210000, 108207571, .0067, 3.390, 6052000, 'navajowhite')
+        earth_planet =  plot_object("Earth", 149600000, 149579138, .0167, 0.000, 6371000, 'dodgerblue')
+        mars_planet =  plot_object("Mars", 227920000, 226921546, .0935, 1.850, 3390000, 'indianred')
+        jupiter_planet =  plot_object("Jupiter", 778570000, 777638581, .0489, 1.304, 69911000, 'orange')
+##        ##jupiter1 = ax.contour(x0, y0, z0,  20, cmap=cm.Oranges) 
+        saturn_planet =  plot_object("Saturn", 1433530000, 1431240078, .0565, 2.485, 58232000, 'navajowhite')
+        uranus_planet =  plot_object("Uranus", 2872460000, 2869458880, .0457, .772, 25362000, 'lightblue')
+        neptune_planet =  plot_object("Neptune", 4495060000, 4494773004, .0113, 1.769, 24622000, 'blue')
+        pluto_planet =  plot_object("Pluto", 5906380000, 5720653186, .2488, 17.16, 1187000,'lightgrey')
+##        ##pl_line, = plt.plot([x, x], [y, y], [z + (r_pl * 2), z + r_pl*500], linewidth=.25, color = "white")  
 
         min_range = i + 1
         if year_calc == repeat_amount:
@@ -527,8 +216,62 @@ while repeat < repeat_amount:
             # Removing the previously drawn labels and lines
             me_text.remove(), v_text.remove(), e_text.remove()
             ma_text.remove(), j_text.remove(), s_text.remove()
-            u_text.remove(), n_text.remove(), pl_text.remove()  #ax.lines.remove(pl_line)
+            u_text.remove(), n_text.remove(), pluto_text.remove()  #ax.lines.remove(pl_line)
 
     calc_range = (min_range+N)
+
+
+
+"""Other Planet Calculations"""
+
+def calc_avgVelocity(averageDistance, semiminor_axis):
+    # Average Orbital Velocity calculation in kilometers per second (using Kepler's Law)
+    avgVelocity = (np.sqrt((grav_constant*mass_sun)*((2/(averageDistance*1000)) - (1/(semiminor_axis*1000)))))/1000
+
+"""Mercury """
+avgDist_mercury = 57900000
+semiminor_axis =  56672817
+vel_mercury = calc_avgVelocity(avgDist_mercury, semiminor_axis)
+
+""" Venus """
+avgDist_venus = 108200000
+semiminor_axis =  108207571
+vel_venus = calc_avgVelocity(avgDist_venus, semiminor_axis)
+
+""" Earth """
+avgDist_earth = 149600000
+semiminor_axis =  149579138
+vel_earth = calc_avgVelocity(avgDist_earth, semiminor_axis)
+
+""" Mars """
+avgDist_mars = 227900000
+semiminor_axis =  226921546
+vel_mars = calc_avgVelocity(avgDist_mars, semiminor_axis)
+
+""" Jupiter """
+avgDist_jupiter = 778600000
+semiminor_axis =  777638581
+vel_jupiter = calc_avgVelocity(avgDist_jupiter, semiminor_axis)
+
+""" Saturn """
+avgDist_saturn = 1433500000
+semiminor_axis =  1431240078
+vel_saturn = calc_avgVelocity(avgDist_saturn, semiminor_axis)
+
+""" Uranus """
+avgDist_uranus = 287250000
+semiminor_axis =  2869458880
+vel_uranus = calc_avgVelocity(avgDist_uranus, semiminor_axis)
+
+""" Neptune """
+avgDist_neptune = 4495100000
+semiminor_axis =  4494773004
+vel_neptune = calc_avgVelocity(avgDist_neptune, semiminor_axis)
+
+""" Pluto """
+avgDist_pluto = 3670000000
+semiminor_axis =  5720653186
+vel_pluto = calc_avgVelocity(avgDist_pluto, semiminor_axis)
+
     
 print("The program has finished after calculating/plotting the planets orbits for " + str(repeat_amount) + " Earth years")
