@@ -167,14 +167,14 @@ pluto_orbit =  elliptical_orbit_line(5906380000, 5720653186, .2488, 17.16)
 grav_constant =  6.67*(10**(-11))
 mass_sun = 1.98855*(10**30)
 earth_year = 1.0010
-planet_smooth = 3
+planet_smooth = 4
 
 sun = draw_sphere(695956*50, 0, 0, 0, 'yellow')                     #####figure out how to scale this when you zoom in to graph.
 
 """ Starting parameters """
 #repeat_amount = 5
 repeat_amount = float(input("How many years would you like to see?: "))
-N = 30                            # The lower the value the faster and more jumpy the planets orbit. (25 is ideal)
+N = 40                            # The lower the value the faster and more jumpy the planets orbit. (25 is ideal)
 min_range = 0
 repeat = 0
 calc_range = N
