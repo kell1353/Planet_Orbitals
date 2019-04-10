@@ -5,8 +5,8 @@ import time
 import vtk
 import os, os.path
 
-repeat_amount = int(input("How many years would you like to see?: "))
-fig = mlab.figure('Solar System', bgcolor = (0,0,0), size = (600,400))
+repeat_amount = float(input("How many years would you like to see?: "))
+fig = mlab.figure('Solar System', bgcolor = (0,0,0), size = (700,500))
 
 path = "/Users/Austin Keller/Desktop/planet textures"
 
@@ -29,7 +29,7 @@ def draw_sun(r, x, y, z):
     x = (r* np.sin(phi) * np.cos(theta)) + x
     y = (r*np.sin(phi) * np.sin(theta)) + y
     z = (r*np.cos(phi)) + z
-    star = mlab.mesh(x, y, z)              #(having higher strides allow the program to run faster)
+    star = mlab.mesh(x, y, z)
 
 def draw_sphere(e_r, p_r):
     global x; global y; global z
@@ -83,7 +83,7 @@ phi, theta = np.meshgrid(phi, theta)
 sun = draw_sun(695956*50, 0, 0, 0)
 sun_texture = vtk.vtkTexture()
 sun_textureReader = vtk.vtkJPEGReader()
-sun_textureReader.SetFileName(os.path.join(path, 'sun_scaled.jpg'))
+sun_textureReader.SetFileName(os.path.join(path, 'sun_bright.jpg'))
 sun_texture.SetInputConnection(sun_textureReader.GetOutputPort())
 get_texture(star, sun_texture)
 
@@ -235,7 +235,7 @@ get_texture(saturn, s_texture)
 # Saturn's Rings Texture Wrapping
 r_texture = vtk.vtkTexture()
 r_textureReader = vtk.vtkJPEGReader()
-r_textureReader.SetFileName(os.path.join(path, 'saturnringcolor.jpg'))
+r_textureReader.SetFileName(os.path.join(path, 'saturn_rings_texture.jpg'))
 r_texture.SetInputConnection(r_textureReader.GetOutputPort())
 get_flat_texture(rings, r_texture)
 
@@ -311,23 +311,22 @@ get_texture(pluto, pl_texture)
 
 """ Animation constants"""
 N = 30
-scaling_factor = 20000000
-calc_range = ((N + 1) * repeat_amount)
+scaling_factor = 200000000
+calc_range = int(((N + 1) * repeat_amount))
 
 """Draw planet as spheres at specific points"""
 @mlab.animate(delay = 50)
 def anim():
     for i in range(0, calc_range):
         if i > 0:
-                mercury_line.remove(), venus_line.remove(), earth_line.remove()
-                mars_line.remove()#, jupiter_line.remove(), saturn_line.remove()
-                ##uranus_line.remove(), neptune_line.remove(), pluto_line.remove()
-                pluto_line.remove()
-                
+                #mercury_text.remove(), venus_text.remove(), earth_text.remove()
+                #mars_text.remove()#, jupiter_text.remove(), saturn_text.remove()
+                ##uranus_text.remove(), neptune_text.remove(), pluto_text.remove()
+                count.remove()
         time.sleep(.0000001)
         # Show the amount of years have passed during the orbits
-        year_calc = round(i/N, 2)
-        #sub_title = mlab.text3d(0, 0, 40000000, str(year_calc) + ' Earth years', color = (1,1,1), scale = .7)
+        year_calc = round(i/N, 1)
+        count = mlab.text3d(-2000000000, -2000000000, 700000000, str(year_calc) + ' Earth years', color = (1,1,1), scale =  (scaling_factor,scaling_factor,scaling_factor))
         #print(i)
         """ Mercury """
         me_x = (me_xCenter + me_semimajorAxis * np.cos(2*np.pi*i/(N/me_scaledPer)) * np.cos(np.radians(init_theta)) - me_semiminorAxis * np.sin(2*np.pi*i/(N/me_scaledPer))* np.sin(np.radians(init_theta)))*np.cos(np.radians(me_degInclination))
@@ -337,7 +336,7 @@ def anim():
             r1 = -(np.sqrt(((me_x - 0)**2)))
         me_z = r1*np.tan(np.radians(me_degInclination))
         # Planent Text
-        mercury_line = mlab.text3d(me_x, me_y, me_z + (me_polarRad*10), 'Mercury', scale=(scaling_factor , scaling_factor , scaling_factor))
+        #mercury_text = mlab.text3d(me_x, me_y, me_z + (me_polarRad*10), 'Mercury', scale=(scaling_factor , scaling_factor , scaling_factor))
         # Setting x, y, z values
         mercury.mlab_source.set(x = me_eqRad * np.sin(phi) * np.cos(theta) + (me_x), y = me_eqRad * np.sin(phi) * np.sin(theta) + (me_y), z = me_polarRad * np.cos(phi) + (me_z))
         """ Venus """
@@ -348,7 +347,7 @@ def anim():
             r1 = -(np.sqrt(((v_x - 0)**2)))
         v_z = r1*np.tan(np.radians(v_degInclination))
         # Planent Text
-        venus_line = mlab.text3d(v_x, v_y, v_z + (v_polarRad*7), 'Venus', scale=(scaling_factor , scaling_factor , scaling_factor))
+        #venus_text = mlab.text3d(v_x, v_y, v_z + (v_polarRad*7), 'Venus', scale=(scaling_factor , scaling_factor , scaling_factor))
         # Setting x, y, z values
         venus.mlab_source.set(x = v_eqRad * np.sin(phi) * np.cos(theta) + (v_x), y = v_eqRad * np.sin(phi) * np.sin(theta) + (v_y), z = v_polarRad * np.cos(phi) + (v_z))
         """ Earth """
@@ -359,7 +358,7 @@ def anim():
             r1 = -(np.sqrt(((e_x - 0)**2)))
         e_z = r1*np.tan(np.radians(e_degInclination))
         # Planent Text
-        earth_line = mlab.text3d(e_x, e_y, e_z + (e_polarRad*7), 'Earth', scale=(scaling_factor , scaling_factor , scaling_factor))
+        #earth_text = mlab.text3d(e_x, e_y, e_z + (e_polarRad*7), 'Earth', scale=(scaling_factor , scaling_factor , scaling_factor))
         # Setting x, y, z values
         earth.mlab_source.set(x = e_eqRad * np.sin(phi) * np.cos(theta) + (e_x), y = e_eqRad * np.sin(phi) * np.sin(theta) + (e_y), z = e_polarRad * np.cos(phi) + (e_z))
         """ Mars """
@@ -370,7 +369,7 @@ def anim():
             r1 = -(np.sqrt(((ma_x - 0)**2)))
         ma_z = r1*np.tan(np.radians(ma_degInclination))
         # Planent Text
-        mars_line = mlab.text3d(ma_x, ma_y, ma_z + (ma_polarRad*10), 'Mars', scale=(scaling_factor , scaling_factor , scaling_factor))
+        #mars_text = mlab.text3d(ma_x, ma_y, ma_z + (ma_polarRad*10), 'Mars', scale=(scaling_factor , scaling_factor , scaling_factor))
         # Setting x, y, z values
         mars.mlab_source.set(x = ma_eqRad * np.sin(phi) * np.cos(theta) + (ma_x), y = ma_eqRad * np.sin(phi) * np.sin(theta) + (ma_y), z = ma_polarRad * np.cos(phi) + (ma_z))
         """ Jupiter """
@@ -381,7 +380,7 @@ def anim():
             r1 = -(np.sqrt(((j_x - 0)**2)))
         j_z = r1*np.tan(np.radians(j_degInclination))
         # Planent Text
-        ##jupiter_line = mlab.text3d(j_x, j_y, j_z + (j_polarRad*2), 'Jupiter', scale=(scaling_factor , scaling_factor , scaling_factor))
+        ##jupiter_text = mlab.text3d(j_x, j_y, j_z + (j_polarRad*2), 'Jupiter', scale=(scaling_factor , scaling_factor , scaling_factor))
         # Setting x, y, z values
         jupiter.mlab_source.set(x = j_eqRad * np.sin(phi) * np.cos(theta) + (j_x), y = j_eqRad * np.sin(phi) * np.sin(theta) + (j_y), z = j_polarRad * np.cos(phi) + (j_z))
         """ Saturn """
@@ -392,7 +391,7 @@ def anim():
             r1 = -(np.sqrt(((s_x - 0)**2)))
         s_z = r1*np.tan(np.radians(s_degInclination))
         # Planent Text
-        ##saturn_line = mlab.text3d(s_x, s_y, s_z + (s_polarRad*2), 'Saturn', scale=(scaling_factor , scaling_factor , scaling_factor))
+        ##saturn_text = mlab.text3d(s_x, s_y, s_z + (s_polarRad*2), 'Saturn', scale=(scaling_factor , scaling_factor , scaling_factor))
         # Setting x, y, z values
         saturn.mlab_source.set(x = s_eqRad * np.sin(phi) * np.cos(theta) + (s_x), y = s_eqRad * np.sin(phi) * np.sin(theta) + (s_y), z = s_polarRad * np.cos(phi) + (s_z))
         # Saturn's Rings
@@ -405,7 +404,7 @@ def anim():
             r1 = -(np.sqrt(((u_x - 0)**2)))
         u_z = r1*np.tan(np.radians(u_degInclination))
         # Planent Text
-        ##uranus_line = mlab.text3d(u_x, u_y, u_z + (u_polarRad*3), 'Uranus', scale=(scaling_factor , scaling_factor , scaling_factor))
+        ##uranus_text = mlab.text3d(u_x, u_y, u_z + (u_polarRad*3), 'Uranus', scale=(scaling_factor , scaling_factor , scaling_factor))
         # Setting x, y, z values
         uranus.mlab_source.set(x = u_eqRad * np.sin(phi) * np.cos(theta) + (u_x), y = u_eqRad * np.sin(phi) * np.sin(theta) + (u_y), z = u_polarRad * np.cos(phi) + (u_z))
         """ Neptune """
@@ -416,7 +415,7 @@ def anim():
             r1 = -(np.sqrt(((n_x - 0)**2)))
         n_z = r1*np.tan(np.radians(n_degInclination))
         # Planent Text
-##         neptune_line = mlab.text3d(n_x, n_y, n_z + (n_polarRad*3), 'Neptune', scale=(scaling_factor , scaling_factor , scaling_factor))
+##         neptune_text = mlab.text3d(n_x, n_y, n_z + (n_polarRad*3), 'Neptune', scale=(scaling_factor , scaling_factor , scaling_factor))
         # Setting x, y, z values
         neptune.mlab_source.set(x = n_eqRad * np.sin(phi) * np.cos(theta) + (n_x), y = n_eqRad * np.sin(phi) * np.sin(theta) + (n_y), z = n_polarRad * np.cos(phi) + (n_z))
         """ Pluto """
@@ -427,10 +426,56 @@ def anim():
             r1 = -(np.sqrt(((pl_x - 0)**2)))
         pl_z = r1*np.tan(np.radians(pl_degInclination))
         # Planent Text
-        pluto_line = mlab.text3d(pl_x, pl_y, pl_z + (pl_polarRad*100), 'Pluto', scale=(scaling_factor , scaling_factor , scaling_factor))
+        #pluto_text = mlab.text3d(pl_x, pl_y, pl_z + (pl_polarRad*100), 'Pluto', scale=(scaling_factor , scaling_factor , scaling_factor))
         # Setting x, y, z values
         pluto.mlab_source.set(x = pl_eqRad * np.sin(phi) * np.cos(theta) + (pl_x), y = pl_eqRad * np.sin(phi) * np.sin(theta) + (pl_y), z = pl_polarRad * np.cos(phi) + (pl_z))
         yield
 
+# Change camera directions
+##mlab.pitch(.2)
+##mlab.move(forward=17000000000)
 anim()
 mlab.show()
+
+"""Other Planet Calculations"""
+
+def calc_avgVelocity(averageDistance, semiminor_axis):
+    # Average Orbital Velocity calculation in kilometers per second (using Kepler's Law)
+    avgVelocity = (np.sqrt((grav_constant*mass_sun)*((2/(averageDistance*1000)) - (1/(semiminor_axis*1000)))))/1000
+
+"""Mercury """
+avgDist_mercury = 57900000
+semiminor_axis =  56672817
+vel_mercury = calc_avgVelocity(avgDist_mercury, semiminor_axis)
+""" Venus """
+avgDist_venus = 108200000
+semiminor_axis =  108207571
+vel_venus = calc_avgVelocity(avgDist_venus, semiminor_axis)
+""" Earth """
+avgDist_earth = 149600000
+semiminor_axis =  149579138
+vel_earth = calc_avgVelocity(avgDist_earth, semiminor_axis)
+""" Mars """
+avgDist_mars = 227900000
+semiminor_axis =  226921546
+vel_mars = calc_avgVelocity(avgDist_mars, semiminor_axis)
+""" Jupiter """
+avgDist_jupiter = 778600000
+semiminor_axis =  777638581
+vel_jupiter = calc_avgVelocity(avgDist_jupiter, semiminor_axis)
+""" Saturn """
+avgDist_saturn = 1433500000
+semiminor_axis =  1431240078
+vel_saturn = calc_avgVelocity(avgDist_saturn, semiminor_axis)
+""" Uranus """
+avgDist_uranus = 287250000
+semiminor_axis =  2869458880
+vel_uranus = calc_avgVelocity(avgDist_uranus, semiminor_axis)
+""" Neptune """
+avgDist_neptune = 4495100000
+semiminor_axis =  4494773004
+vel_neptune = calc_avgVelocity(avgDist_neptune, semiminor_axis)
+""" Pluto """
+avgDist_pluto = 3670000000
+semiminor_axis =  5720653186
+vel_pluto = calc_avgVelocity(avgDist_pluto, semiminor_axis)
