@@ -327,7 +327,7 @@ def anim():
         # Show the amount of years have passed during the orbits
         year_calc = round(i/N, 1)
         count = mlab.text3d(-2000000000, -2000000000, 700000000, str(year_calc) + ' Earth years', color = (1,1,1), scale =  (scaling_factor,scaling_factor,scaling_factor))
-        #print(i)
+        
         """ Mercury """
         me_x = (me_xCenter + me_semimajorAxis * np.cos(2*np.pi*i/(N/me_scaledPer)) * np.cos(np.radians(init_theta)) - me_semiminorAxis * np.sin(2*np.pi*i/(N/me_scaledPer))* np.sin(np.radians(init_theta)))*np.cos(np.radians(me_degInclination))
         me_y = (me_yCenter + me_semimajorAxis * np.cos(2*np.pi*i/(N/me_scaledPer)) * np.sin(np.radians(init_theta)) + me_semiminorAxis * np.sin(2*np.pi*i/(N/me_scaledPer)) * np.cos(np.radians(init_theta)))
