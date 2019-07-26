@@ -8,7 +8,7 @@ import os, os.path
 repeat_amount = float(input("How many years would you like to see?: "))
 fig = mlab.figure('Solar System', bgcolor = (0,0,0), size = (700,500))
 
-path = "/Users/Austin Keller/Desktop/planet textures"
+path = "/Users/Austin Keller/Desktop/Coding Files/Planetary Orbital Files/planet textures"
 
 def get_texture(name, texture):   
     name.actor.actor.mapper.scalar_visibility=False
